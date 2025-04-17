@@ -321,137 +321,29 @@ draw_quad(QuadData q)
 void
 draw_rect_gradient(float x, float y, float w, float h, Color c0, Color c1, Color c2, Color c3)
 {
-	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0]) - 6) {
-		flush_vertices();
-	}
-	Vec2 uv = { 
-		(font_atlas.white_pixel.x * 1.0f) / font_atlas.w, 
-		(font_atlas.white_pixel.y * 1.0f) / font_atlas.h
-	};
 	float radius = 20.0f;
-	Vertex v1 = { 
-		.pos = { x, y }, 
-		.uv = uv, 
-		.color = c0, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { 0, 0 },
+	QuadData q = {
+		.src = {
+			(font_atlas.white_pixel.x * 1.0f) / font_atlas.w,
+			(font_atlas.white_pixel.y * 1.0f) / font_atlas.h,
+			0,
+			0,
+		},
+		.dst = { x, y, w, h },
+		.c0 = c0,
+		.c1 = c1,
+		.c2 = c2,
+		.c3 = c3,
+		.radius = 20.0f, // probably should be passed as a parameter
 	};
-	Vertex v2 = { 
-		.pos = { x + w, y }, 
-		.uv = uv, 
-		.color = c1, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { w, 0 },
-	};
-	Vertex v3 = { 
-		.pos = { x + w, y + h }, 
-		.uv = uv, 
-		.color = c2, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { w, h },
-	};
-	Vertex v4 = { 
-		.pos = { x + w, y + h }, 
-		.uv = uv, 
-		.color = c2, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { w, h },
-	};
-	Vertex v5 = { 
-		.pos = { x, y + h }, 
-		.uv = uv, 
-		.color = c3, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { 0, h },
-	};
-	Vertex v6 = { 
-		.pos = { x, y }, 
-		.uv = uv, 
-		.color = c0, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { 0, 0 },
-	};
-
-	push_vertex(v1);
-	push_vertex(v2);
-	push_vertex(v3);
-	push_vertex(v4);
-	push_vertex(v5);
-	push_vertex(v6);
+	draw_quad(q);
 }
 
 
 void
 draw_rect(float x, float y, float w, float h, Color color)
 {
-	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0]) - 6) {
-		flush_vertices();
-	}
-	Vec2 uv = { 
-		(font_atlas.white_pixel.x * 1.0f) / font_atlas.w, 
-		(font_atlas.white_pixel.y * 1.0f) / font_atlas.h
-	};
-	float radius = 20.0f;
-	Vertex v1 = { 
-		.pos = { x, y }, 
-		.uv = uv, 
-		.color = color, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { 0, 0 },
-	};
-	Vertex v2 = { 
-		.pos = { x + w, y }, 
-		.uv = uv, 
-		.color = color, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { w, 0 },
-	};
-	Vertex v3 = { 
-		.pos = { x + w, y + h }, 
-		.uv = uv, 
-		.color = color, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { w, h },
-	};
-	Vertex v4 = { 
-		.pos = { x + w, y + h }, 
-		.uv = uv, .color = color, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { w, h },
-	};
-	Vertex v5 = { 
-		.pos = { x, y + h }, 
-		.uv = uv, 
-		.color = color, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { 0, h },
-	};
-	Vertex v6 = { 
-		.pos = { x, y }, 
-		.uv = uv, 
-		.color = color, 
-		.size = { w, h }, 
-		.radius = radius,
-		.rect_pos = { 0, 0 },
-	};
-
-	push_vertex(v1);
-	push_vertex(v2);
-	push_vertex(v3);
-	push_vertex(v4);
-	push_vertex(v5);
-	push_vertex(v6);
+	draw_rect_gradient(x, y, w, h, color, color, color, color);
 }
 
 #ifdef RENDER_TEST
