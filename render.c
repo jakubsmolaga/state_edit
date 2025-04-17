@@ -258,6 +258,9 @@ typedef struct {
 static void
 draw_quad(QuadData q)
 {
+	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0]) - 6) {
+		flush_vertices();
+	}
 	float radius = q.radius;
 	Vertex v1 = { 
 		.pos = { q.dst.x, q.dst.y }, 
