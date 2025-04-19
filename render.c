@@ -229,6 +229,24 @@ push_vertex(Vertex v)
 }
 
 static void
+push_simple_vertex(float x, float y, Color color)
+{
+        Vec2 uv = {
+                .x = (font_atlas.white_pixel.x * 1.0f) / font_atlas.w,
+                .y = (font_atlas.white_pixel.y * 1.0f) / font_atlas.h,
+        };
+        Vertex v = {
+                .pos = { x, y },
+                .uv = uv,
+                .color = color,
+                .size = { 0, 0 },
+                .radius = 0,
+                .rect_pos = { 0, 0 },
+        };
+        push_vertex(v);
+}
+
+static void
 draw_quad(QuadData q)
 {
 	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0]) - 6) {
@@ -351,37 +369,9 @@ draw_rect(float x, float y, float w, float h, Color color)
 void
 draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color)
 {
-        Vec2 uv = {
-                .x = (font_atlas.white_pixel.x * 1.0f) / font_atlas.w,
-                .y = (font_atlas.white_pixel.y * 1.0f) / font_atlas.h,
-        };
-        Vertex v0 = {
-                .pos = {x0, y0},
-                .uv = uv,
-                .color = color,
-                .size = {0, 0},
-                .radius = 0,
-                .rect_pos = {0, 0},
-        };
-        Vertex v1 = {
-                .pos = {x1, y1},
-                .uv = uv,
-                .color = color,
-                .size = {0, 0},
-                .radius = 0,
-                .rect_pos = {1, 0},
-        };
-        Vertex v2 = {
-                .pos = {x2, y2},
-                .uv = uv,
-                .color = color,
-                .size = {0, 0},
-                .radius = 0,
-                .rect_pos = {1, 1},
-        };
-        push_vertex(v0);
-        push_vertex(v1);
-        push_vertex(v2);
+        push_simple_vertex(x0, y0, color);
+        push_simple_vertex(x1, y1, color);
+        push_simple_vertex(x2, y2, color);
 }
 
 void
