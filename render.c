@@ -445,6 +445,10 @@ draw_line(float x0, float y0, float x1, float y1, float width, Color color)
         push_simple_vertex(p1.x, p1.y, color);
         push_simple_vertex(p2.x, p2.y, color);
         push_simple_vertex(p3.x, p3.y, color);
+
+	// draw round line ends
+	draw_circle(x0, y0, width * 1.0f, color);
+	draw_circle(x1, y1, width * 1.0f, color);
 }
 
 void
