@@ -19,6 +19,8 @@ int main() {
 		draw_rect(400 - 20, 300 + 20, 150 + 10, 200 + 10, (Color){0.0f, 0.0f, 0.0f, 0.5f});
 		draw_rect(400 - 2, 300 - 2, 150 + 4, 200 + 4, (Color){0.95f, 0.95f, 0.95f, 1.0f});
 		draw_rect_gradient(400, 300, 150, 200, blue, red, green, yellow);
+
+		draw_triangle(100, 500, 300, 500, 300, 800, yellow);
 		finish_drawing();
 
 		swap_buffers();
