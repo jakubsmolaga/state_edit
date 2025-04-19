@@ -346,6 +346,12 @@ draw_quad(QuadData q)
 	push_vertex(v6);
 }
 
+static int
+is_char_printable(char c)
+{
+	return (c >= 32) && (c <= 126);
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                 public api                                 */
 /* -------------------------------------------------------------------------- */
@@ -466,10 +472,9 @@ draw_text(const char *text, float height, float x, float y, Color color)
 			y += height;
 			continue;
 		}
-		int index = *p - ' ';
-		if (index < 0 || index >= font_atlas.rows * font_atlas.cols) {
+		if (!is_char_printable(*p))
 			continue;
-		}
+		int index = *p - ' ';
 		int row = index / font_atlas.cols;
 		int col = index % font_atlas.cols;
 		float src_x = col * font_atlas.cell_w;
@@ -510,7 +515,7 @@ measure_text(const char *text, float height, float *w, float *h)
 			x = 0;
 			continue;
 		}
-		if (*p < 32 || *p > 126)
+		if (!is_char_printable(*p))
 			continue;
 		x += char_w;
 		if (x > *w)
