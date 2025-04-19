@@ -87,6 +87,8 @@ typedef struct {
 	float radius;
 } QuadData;
 
+static const float PI = 3.14159265358979323846f;
+
 static Vertex vertices[4096];
 static size_t vertex_count = 0;
 static GLuint program;
@@ -98,6 +100,38 @@ struct {
 	int w, h, cell_w, cell_h, rows, cols;
 	Vec2 white_pixel; // pixel used for drawing shapes
 } font_atlas;
+
+static float
+vec2_len(Vec2 v)
+{
+        return sqrtf(v.x*v.x + v.y*v.y);
+}
+
+static Vec2
+vec2_scale(Vec2 v, float scale)
+{
+        return (Vec2){ v.x * scale, v.y * scale };
+}
+
+static float
+vec2_get_angle(Vec2 v)
+{
+        return atan2f(v.y, v.x);
+}
+
+static Vec2
+vec2_rotate(Vec2 v, float angle)
+{
+        float cos_a = cosf(angle);
+        float sin_a = sinf(angle);
+        return (Vec2){ v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a };
+}
+
+static Vec2
+vec2_norm(Vec2 v)
+{
+        return vec2_scale(v, 1.0 / vec2_len(v));
+}
 
 static void
 init_font_atlas(void)
@@ -372,6 +406,25 @@ draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, Color 
         push_simple_vertex(x0, y0, color);
         push_simple_vertex(x1, y1, color);
         push_simple_vertex(x2, y2, color);
+}
+
+void
+draw_line(float x0, float y0, float x1, float y1, float width, Color color)
+{
+        Vec2 dir = {x1 - x0, y1 - y0};
+        Vec2 norm = vec2_norm(dir);
+        Vec2 off0 = vec2_rotate(norm, PI / 2.0f);
+        Vec2 off1 = vec2_rotate(norm, -PI / 2.0f);
+        Vec2 p0 = {x0 + off0.x * width, y0 + off0.y * width};
+        Vec2 p1 = {x0 + off1.x * width, y0 + off1.y * width};
+        Vec2 p2 = {x1 + off0.x * width, y1 + off0.y * width};
+        Vec2 p3 = {x1 + off1.x * width, y1 + off1.y * width};
+        push_simple_vertex(p0.x, p0.y, color);
+        push_simple_vertex(p1.x, p1.y, color);
+        push_simple_vertex(p2.x, p2.y, color);
+        push_simple_vertex(p1.x, p1.y, color);
+        push_simple_vertex(p2.x, p2.y, color);
+        push_simple_vertex(p3.x, p3.y, color);
 }
 
 void
