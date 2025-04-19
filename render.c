@@ -7,7 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-const char vs_code[] = 
+static const char vs_code[] = 
 	"#version 300 es\n"
 	"precision mediump float;"
 	"layout(location = 0) in vec2 a_pos;"
@@ -35,7 +35,7 @@ const char vs_code[] =
 		"v_rect_pos = a_rect_pos;"
 	"}";
 
-const char fs_code[] =
+static const char fs_code[] =
 	"#version 300 es\n"
 	"precision mediump float;"
 	"in vec4 v_color;"
@@ -74,11 +74,24 @@ typedef struct {
 	Vec2 rect_pos;
 } Vertex;
 
-Vertex vertices[4096];
-size_t vertex_count = 0;
-GLuint program;
-GLuint vao;
-GLuint vbo;
+
+typedef struct {
+	float x, y, w, h;
+} Rect;
+
+// data required for drawing rectangles
+typedef struct {
+	Rect src;
+	Rect dst;
+	Color c0, c1, c2, c3;
+	float radius;
+} QuadData;
+
+static Vertex vertices[4096];
+static size_t vertex_count = 0;
+static GLuint program;
+static GLuint vao;
+static GLuint vbo;
 
 struct {
 	GLuint texture;
@@ -86,7 +99,7 @@ struct {
 	Vec2 white_pixel; // pixel used for drawing shapes
 } font_atlas;
 
-void
+static void
 init_font_atlas(void)
 {
 	unsigned char *data = stbi_load("font_atlas.png", &font_atlas.w, &font_atlas.h, NULL, 4);
@@ -138,7 +151,7 @@ compile_shader_unit(const char *code, GLenum type)
 	return shader;
 }
 
-void
+static void
 init_shader_program(void)
 {
 	GLuint vs = compile_shader_unit(vs_code, GL_VERTEX_SHADER);
@@ -165,7 +178,7 @@ init_shader_program(void)
 	glDeleteShader(fs);
 }
 
-void
+static void
 init_vao(void)
 {
 	glGenVertexArrays(1, &vao);
@@ -192,7 +205,7 @@ init_vao(void)
 	glBindVertexArray(0);
 }
 
-void
+static void
 flush_vertices(void)
 {
 	if (vertex_count == 0) {
@@ -206,7 +219,7 @@ flush_vertices(void)
 	vertex_count = 0;
 }
 
-void
+static void
 push_vertex(Vertex v)
 {
 	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0])) {
@@ -214,45 +227,6 @@ push_vertex(Vertex v)
 	}
 	vertices[vertex_count++] = v;
 }
-
-void
-render_init(void)
-{
-	init_font_atlas();
-	init_shader_program();
-	init_vao();
-}
-
-void
-start_drawing(int window_width, int window_height)
-{
-	glViewport(0, 0, window_width, window_height);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-
-	glUseProgram(program);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, font_atlas.texture);
-	glUniform1i(glGetUniformLocation(program, "texture1"), 0);
-	glUniform2f(glGetUniformLocation(program, "u_resolution"), window_width, window_height);
-}
-
-typedef struct {
-	float x, y, w, h;
-} Rect;
-
-// data required for drawing rectangles
-typedef struct {
-	Rect src;
-	Rect dst;
-	Color c0, c1, c2, c3;
-	float radius;
-} QuadData;
 
 static void
 draw_quad(QuadData q)
@@ -315,6 +289,37 @@ draw_quad(QuadData q)
 	push_vertex(v4);
 	push_vertex(v5);
 	push_vertex(v6);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 public api                                 */
+/* -------------------------------------------------------------------------- */
+
+void
+render_init(void)
+{
+	init_font_atlas();
+	init_shader_program();
+	init_vao();
+}
+
+void
+start_drawing(int window_width, int window_height)
+{
+	glViewport(0, 0, window_width, window_height);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+
+	glUseProgram(program);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, font_atlas.texture);
+	glUniform1i(glGetUniformLocation(program, "texture1"), 0);
+	glUniform2f(glGetUniformLocation(program, "u_resolution"), window_width, window_height);
 }
 
 void
