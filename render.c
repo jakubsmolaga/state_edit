@@ -345,6 +345,12 @@ draw_rect(float x, float y, float w, float h, Color color)
 	draw_rect_gradient(x, y, w, h, color, color, color, color);
 }
 
+void
+finish_drawing(void)
+{
+	flush_vertices();
+}
+
 #ifdef RENDER_TEST
 #include "platform.h"
 
