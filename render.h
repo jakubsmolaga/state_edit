@@ -13,3 +13,4 @@ void draw_rect(float x, float y, float w, float h, Color color);
 void draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color);
 void draw_line(float x0, float y0, float x1, float y1, float width, Color color);
 void draw_circle(float x, float y, float radius, Color color);
+void draw_text(const char *text, float height, float x, float y, Color color);

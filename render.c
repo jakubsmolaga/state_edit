@@ -456,6 +456,46 @@ draw_line(float x0, float y0, float x1, float y1, float width, Color color)
 }
 
 void
+draw_text(const char *text, float height, float x, float y, Color color)
+{
+	float base_x = x;
+	float scale = height / font_atlas.cell_h;
+	for (const char *p = text; *p; p++) {
+		if (*p == '\n') {
+			x = base_x;
+			y += height;
+			continue;
+		}
+		int index = *p - ' ';
+		if (index < 0 || index >= font_atlas.rows * font_atlas.cols) {
+			continue;
+		}
+		int row = index / font_atlas.cols;
+		int col = index % font_atlas.cols;
+		float src_x = col * font_atlas.cell_w;
+		float src_y = row * font_atlas.cell_h;
+		float src_w = font_atlas.cell_w;
+		float src_h = font_atlas.cell_h;
+		QuadData q = {
+			.src = {
+				src_x / font_atlas.w,
+				src_y / font_atlas.h,
+				src_w / font_atlas.w,
+				src_h / font_atlas.h,
+			},
+			.dst = { x, y, src_w * scale, height },
+			.c0 = color,
+			.c1 = color,
+			.c2 = color,
+			.c3 = color,
+			.radius = 0.0f,
+		};
+		draw_quad(q);
+		x += src_w * scale;
+	}
+}
+
+void
 finish_drawing(void)
 {
 	flush_vertices();
