@@ -52,7 +52,7 @@ static const char fs_code[] =
 		"vec2 maxB = v_size - v_radius;"
 		"vec2 nearest = clamp(v_rect_pos, minB, maxB);"
 		"float dist2 = dot(v_rect_pos - nearest, v_rect_pos - nearest);"
-		"float mask = smoothstep(dist2 - 64.0, dist2, v_radius * v_radius);"
+		"float mask = step(dist2, v_radius * v_radius);"
 		"vec4 col = texture(texture1, v_uv);"
 		"FragColor = col * v_color * vec4(1.0, 1.0, 1.0, mask);"
 	"}";
