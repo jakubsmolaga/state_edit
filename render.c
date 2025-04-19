@@ -234,7 +234,6 @@ draw_quad(QuadData q)
 	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0]) - 6) {
 		flush_vertices();
 	}
-	float radius = q.radius;
 	Vertex v1 = { 
 		.pos = { q.dst.x, q.dst.y }, 
 		.uv = { q.src.x, q.src.y },
@@ -325,7 +324,6 @@ start_drawing(int window_width, int window_height)
 void
 draw_rect_gradient(float x, float y, float w, float h, Color c0, Color c1, Color c2, Color c3)
 {
-	float radius = 20.0f;
 	QuadData q = {
 		.src = {
 			(font_atlas.white_pixel.x * 1.0f) / font_atlas.w,
