@@ -1,4 +1,3 @@
-#define GLFW_INCLUDE_NONE
 #include <GLES3/gl3.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -347,34 +346,10 @@ draw_rect(float x, float y, float w, float h, Color color)
 }
 
 #ifdef RENDER_TEST
-#include <GLFW/glfw3.h>
-
-void my_glfw_error_callback(int error, const char *description) {
-	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-		exit(EXIT_FAILURE);
-}
+#include "platform.h"
 
 int main() {
-	if (!glfwInit()) {
-		fprintf(stderr, "Failed to initialize GLFW\n");
-		return -1;
-	}
-	glfwSetErrorCallback(my_glfw_error_callback);
-
-	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	GLFWwindow *window = glfwCreateWindow(800, 600, "Render Test", NULL, NULL);
-	if (!window) {
-		fprintf(stderr, "Failed to create window\n");
-		glfwTerminate();
-		return -1;
-	}
-
-	glfwMakeContextCurrent(window);
-
+	create_window(800,  600, "my window");
 	render_init();
 
 	Color blue = {0.2f, 0.2f, 0.8f, 1.0f};
@@ -382,10 +357,9 @@ int main() {
 	Color green = {0.2f, 0.8f, 0.2f, 1.0f};
 	Color yellow = {0.8f, 0.8f, 0.2f, 1.0f};
 
-
-	while (!glfwWindowShouldClose(window)) {
+	while (get_next_frame()) {
 		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
+		get_window_size(&width, &height);
 		start_drawing(width, height);
 		draw_rect(100, 100, 200, 150, (Color){8.0f, 0.2f, 0.2f, 1.0f});
 		draw_rect(400 - 20, 300 + 20, 150 + 10, 200 + 10, (Color){0.0f, 0.0f, 0.0f, 0.5f});
@@ -393,13 +367,12 @@ int main() {
 		draw_rect_gradient(400, 300, 150, 200, blue, red, green, yellow);
 		flush_vertices();
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		swap_buffers();
 		usleep(16000); // Sleep for 16ms to limit frame rate
 	}
+	close_window();
 
-	glfwDestroyWindow(window);
-	glfwTerminate();
+
 	return 0;
 }
 
