@@ -496,6 +496,29 @@ draw_text(const char *text, float height, float x, float y, Color color)
 }
 
 void
+measure_text(const char *text, float height, float *w, float *h)
+{
+	float scale = height / font_atlas.cell_h;
+	float char_h = height;
+	float char_w = font_atlas.cell_w * scale;
+	float x = 0.0f;
+	*w = 0.0f;
+	*h = char_h;
+	for (const char *p = text; *p; p++) {
+		if (*p == '\n') {
+			*h += char_h;
+			x = 0;
+			continue;
+		}
+		if (*p < 32 || *p > 126)
+			continue;
+		x += char_w;
+		if (x > *w)
+			*w = x;
+	}
+}
+
+void
 finish_drawing(void)
 {
 	flush_vertices();
