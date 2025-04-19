@@ -409,6 +409,26 @@ draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, Color 
 }
 
 void
+draw_circle(float x, float y, float radius, Color color)
+{
+	QuadData q = {
+		.src = {
+			(font_atlas.white_pixel.x * 1.0f) / font_atlas.w,
+			(font_atlas.white_pixel.y * 1.0f) / font_atlas.h,
+			0,
+			0,
+		},
+		.dst = { x - radius, y - radius, radius * 2, radius * 2 },
+		.c0 = color,
+		.c1 = color,
+		.c2 = color,
+		.c3 = color,
+		.radius = radius,
+	};
+	draw_quad(q);
+}
+
+void
 draw_line(float x0, float y0, float x1, float y1, float width, Color color)
 {
         Vec2 dir = {x1 - x0, y1 - y0};
