@@ -296,12 +296,19 @@ push_simple_vertex(float x, float y, Color color)
         push_vertex(v);
 }
 
+// make sure there is enough space in the buffer to
+// push n vertices into it
+static void
+will_push_vertices(int n)
+{
+	if (vertex_count + n >= sizeof(vertices) / sizeof(*vertices)) {
+		flush_vertices();
+	}
+}
+
 static void
 draw_quad(QuadData q)
 {
-	if (vertex_count >= sizeof(vertices) / sizeof(vertices[0]) - 6) {
-		flush_vertices();
-	}
 	Vertex v1 = { 
 		.pos = { q.dst.x, q.dst.y }, 
 		.uv = { q.src.x, q.src.y },
@@ -350,6 +357,7 @@ draw_quad(QuadData q)
 		.radius = q.radius,
 		.rect_pos = { 0, 0 },
 	};
+	will_push_vertices(6);
 	push_vertex(v1);
 	push_vertex(v2);
 	push_vertex(v3);
@@ -425,6 +433,7 @@ draw_rect(float x, float y, float w, float h, Color color)
 void
 draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color)
 {
+	will_push_vertices(3);
         push_simple_vertex(x0, y0, color);
         push_simple_vertex(x1, y1, color);
         push_simple_vertex(x2, y2, color);
@@ -461,6 +470,7 @@ draw_line(float x0, float y0, float x1, float y1, float width, Color color)
         Vec2 p1 = {x0 + off1.x * width, y0 + off1.y * width};
         Vec2 p2 = {x1 + off0.x * width, y1 + off0.y * width};
         Vec2 p3 = {x1 + off1.x * width, y1 + off1.y * width};
+	will_push_vertices(6);
         push_simple_vertex(p0.x, p0.y, color);
         push_simple_vertex(p1.x, p1.y, color);
         push_simple_vertex(p2.x, p2.y, color);
