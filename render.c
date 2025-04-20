@@ -133,6 +133,18 @@ vec2_norm(Vec2 v)
         return vec2_scale(v, 1.0 / vec2_len(v));
 }
 
+static Vec2
+vec2_sub(Vec2 v0, Vec2 v1)
+{
+	return (Vec2){ v0.x - v1.x, v0.y - v1.y };
+}
+
+static Vec2
+vec2_add(Vec2 v0, Vec2 v1)
+{
+	return (Vec2){ v0.x + v1.x, v0.y + v1.y };
+}
+
 static void
 init_font_atlas(void)
 {
@@ -521,6 +533,19 @@ measure_text(const char *text, float height, float *w, float *h)
 		if (x > *w)
 			*w = x;
 	}
+}
+
+void
+draw_arrow(float x0, float y0, float x1, float y1, float width, Color color)
+{
+	Vec2 diff = {x1-x0, y1-y0};
+	Vec2 dir = vec2_norm(diff);
+	Vec2 off = vec2_scale(vec2_rotate(dir, PI / 2.0), width * 4);
+	Vec2 mid = (Vec2){ x1 - dir.x * width * 8, y1 - dir.y * width * 8 };
+	Vec2 p0 = vec2_sub(mid, off);
+	Vec2 p1 = vec2_add(mid, off);
+	draw_line(x0, y0, mid.x, mid.y, width, color);
+	draw_triangle(p0.x, p0.y, x1, y1, p1.x, p1.y, color);
 }
 
 void

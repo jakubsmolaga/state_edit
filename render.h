@@ -15,3 +15,4 @@ void draw_line(float x0, float y0, float x1, float y1, float width, Color color)
 void draw_circle(float x, float y, float radius, Color color);
 void draw_text(const char *text, float height, float x, float y, Color color);
 void measure_text(const char *text, float height, float *w, float *h);
+void draw_arrow(float x0, float y0, float x1, float y1, float width, Color color);
