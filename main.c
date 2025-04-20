@@ -10,6 +10,8 @@ int main() {
 	Color red = {0.8f, 0.2f, 0.2f, 1.0f};
 	Color green = {0.2f, 0.8f, 0.2f, 1.0f};
 	Color yellow = {0.8f, 0.8f, 0.2f, 1.0f};
+	Color white = {1.0, 1.0, 1.0, 1.0};
+	Color black = {0.0, 0.0, 0.0, 1.0};
 
 	while (get_next_frame()) {
 		int width, height;
@@ -20,9 +22,25 @@ int main() {
 		draw_rect(400 - 2, 300 - 2, 150 + 4, 200 + 4, (Color){0.95f, 0.95f, 0.95f, 1.0f});
 		draw_rect_gradient(400, 300, 150, 200, blue, red, green, yellow);
 
+		draw_line(100, 500, 300, 800, 10, green);
 		draw_triangle(100, 500, 300, 500, 300, 800, yellow);
-		finish_drawing();
 
+		draw_circle(400, 300, 50, (Color){0.2f, 0.2f, 0.8f, 1.0f});
+		draw_circle(420, 320, 50, red);
+
+		{
+			const char *text = "hello world\nhow are you?";
+			float font_size = 40.0f;
+			float w, h;
+			measure_text(text, font_size, &w, &h);
+			draw_rect(100 - 10, 300 - 10, w + 20, h + 20, white);
+			draw_rect(100 - 8, 300 - 8, w + 16, h + 16, black);
+			draw_text(text, 40, 100, 300, white);
+		}
+
+		draw_arrow(200, 700, 600, 500, 5, red);
+
+		finish_drawing();
 		swap_buffers();
 		sleep(1);
 	}
