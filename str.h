@@ -55,6 +55,24 @@ str_new(void)
 }
 
 static String
+str_make(const char *str)
+{
+	int len = 0;
+	while (str[len] != '\0') {
+		++len;
+	}
+	_StrHdr* hdr = (_StrHdr*)malloc(sizeof(_StrHdr) + len + 1);
+	hdr->len = len;
+	hdr->cap = len + 1;
+	String new_str = (String)(&hdr[1]);
+	for (int i = 0; i < len; ++i) {
+		new_str[i] = str[i];
+	}
+	new_str[len] = '\0';
+	return new_str;
+}
+
+static String
 str_push(String str, char c)
 {
         _StrHdr* hdr = _str_hdr(str);

@@ -32,6 +32,8 @@ main(void)
 	str = str_insert_str(str, 5, " World");
 	assert(strcmp(str, "Hello World!") == 0);
         str_free(str);
+	str = str_make("Something else");
+	assert(strcmp(str, "Something else") == 0);
         return 0;
 }
 #endif
