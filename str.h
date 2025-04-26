@@ -85,7 +85,7 @@ str_cut(String str, int beg, int end)
         _StrHdr* hdr = _str_hdr(str);
         beg = beg < 0 ? 0 : beg;
         end = end > hdr->len ? hdr->len : end;
-        for (int i = beg; i < end; ++i) {
+        for (int i = beg; i + end - beg < hdr->len; ++i) {
                 str[i] = str[i + end - beg];
         }
         hdr->len -= (end - beg);
