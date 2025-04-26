@@ -1,6 +1,6 @@
+#define TEST_STR
 #ifdef TEST_STR
 #include <string.h>
-#include <stdio.h>
 #include <assert.h>
 #include "str.h"
 
@@ -26,8 +26,11 @@ main(void)
         str = str_insert(str, 0, 'H');
         assert(strcmp(str, "HHello, World!") == 0);
         str = str_cut(str, 6, 13);
-        printf("%s\n", str);
         assert(strcmp(str, "HHello!") == 0);
+	str = str_cut(str, 0, 1);
+	assert(strcmp(str, "Hello!") == 0);
+	str = str_insert_str(str, 5, " World");
+	assert(strcmp(str, "Hello World!") == 0);
         str_free(str);
         return 0;
 }
