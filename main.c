@@ -31,8 +31,10 @@ update(void)
 		}
 		if (event.type == EVENT_KEY_PRESS) {
 			KeyEvent key_event = event.keypress;
-			if (key_event.text[0] != '\0') {
-				printf("key pressed: %s\n", key_event.text);
+			if (key_event.c != 0) {
+				printf("key pressed: %c (%d)\n", key_event.c, (int)key_event.c);
+			} else {
+				printf("special key pressed: %d\n", key_event.special_key);
 			}
 		}
 		event = platform_next_event();

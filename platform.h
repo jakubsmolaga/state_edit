@@ -27,7 +27,7 @@ typedef enum {
 typedef struct {
 	EventType type;
 	SpecialKey special_key;
-	char text[16];
+	char c;
 	KeyMods mods;
 } KeyEvent;
 

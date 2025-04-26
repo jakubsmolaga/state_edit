@@ -61,8 +61,11 @@ xkeyevent_to_keyevent(XKeyEvent event)
 	KeyEvent e = {0};
 	e.type = EVENT_KEY_PRESS;
 	KeySym keysym;
-	int len = XLookupString(&event, e.text, sizeof(e.text) - 1, &keysym, NULL);
-	e.text[len] = '\0';
+	char buf[32];
+	int len = XLookupString(&event, buf, sizeof(buf) - 1, &keysym, NULL);
+	if (keysym >= ' ' && keysym <= '~') {
+		e.c = keysym;
+	}
 	e.special_key = keycode_to_specialkey(keysym);
 	e.mods = get_x11_keymods(event);
 	return e;
