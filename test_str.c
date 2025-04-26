@@ -1,3 +1,4 @@
+#ifdef TEST_STR
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
@@ -30,3 +31,4 @@ main(void)
         str_free(str);
         return 0;
 }
+#endif
